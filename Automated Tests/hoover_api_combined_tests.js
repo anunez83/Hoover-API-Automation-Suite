@@ -70,7 +70,7 @@ Scenario('The Hoover is navigated across the entirety of the grid', ({ I }) => {
 Scenario('The Hoover is navigated across the entirety of the grid with each sector being defined as a dirt patch', ({ I }) => {
 
     // PLEASE NOTE // Running this scenario will invalidate the results of subsequent tests because of how the API is storing patch data. In order to resolve this issue the API service will need to be restarted.
-    
+
     // Given the dirt patches provided
     var expectedJson = { "coords": [4, 4], "patches": 24 }
 
