@@ -2,7 +2,7 @@ const { url, createJsonPayload } = require(`./hoover_commons`);
 
 Feature('Hoover API Tests');
 
-Scenario('The Hoover is sent to clean one patch of dirt', ({ I }) => {
+Scenario('The Hoover is sent to clean one patch of dirt on a 5x5 grid', ({ I }) => {
 
     // Given the dirt patches provided
     var expectedJson = { "coords": [1, 3], "patches": 1 }
@@ -15,7 +15,7 @@ Scenario('The Hoover is sent to clean one patch of dirt', ({ I }) => {
     I.seeResponseContainsJson(expectedJson)
 });
 
-Scenario('The Hoover is sent to clean two patches of dirt', ({ I }) => {
+Scenario('The Hoover is sent to clean two patches of dirt on a 5x5 grid', ({ I }) => {
 
     // Given the dirt patches provided
     var expectedJson = { "coords": [0, 0], "patches": 2 }
@@ -28,7 +28,7 @@ Scenario('The Hoover is sent to clean two patches of dirt', ({ I }) => {
     I.seeResponseContainsJson(expectedJson)
 });
 
-Scenario('The Hoover is sent to clean three patches of dirt', ({ I }) => {
+Scenario('The Hoover is sent to clean three patches of dirt on a 5x5 grid', ({ I }) => {
 
     // Given the dirt patches provided
     var expectedJson = { "coords": [1, 3], "patches": 3 }
@@ -37,6 +37,19 @@ Scenario('The Hoover is sent to clean three patches of dirt', ({ I }) => {
     I.sendPostRequest(url, createJsonPayload(coords = [1, 2], patches = [[1, 0], [2, 2], [2, 3]], instructions = "SSENNNW"))
 
     // Then I should see that 3 patches were cleaned
+    I.seeResponseCodeIsSuccessful();
+    I.seeResponseContainsJson(expectedJson)
+});
+
+Scenario('The Hoover is sent to clean two patches of dirt on a 10x10 grid', ({ I }) => {
+
+     // Given the dirt patches provided
+     var expectedJson = { "coords": [6, 0], "patches": 2 }
+
+    // When the following network request is sent
+    I.sendPostRequest(url, { "roomSize": [10, 10], "coords": [9, 0], "patches": [[5, 0], [6, 2], [8, 3]], "instructions": "WNNNWWSSS" })
+
+    // Then I should see that 2 patches were cleaned
     I.seeResponseCodeIsSuccessful();
     I.seeResponseContainsJson(expectedJson)
 });
@@ -85,10 +98,10 @@ Scenario('The Hoover is navigated across the entirety of the grid with each sect
 Scenario('The starting coordinates of the Hoover are outside of the defined grid size', ({ I }) => {
 
     // When the following network request is sent
-    I.sendPostRequest(url, createJsonPayload(coords = [1, 2], patches = [[1, 0], [2, 2], [2, 3]], instructions = "SSENNNW"))
+    I.sendPostRequest(url, createJsonPayload(coords = [5, 5], patches = [[1, 0], [2, 2], [2, 3]], instructions = "SSENNNW"))
 
-    // Then I expect to see a server error based on the coordinates being outside of the defined grid
-    I.seeResponseCodeIsServerError()
+    // Then I expect to see a client error based on the coordinates being outside of the defined grid
+    I.seeResponseCodeIsClientError();
 });
 
 Scenario('The network request payload has an empty "instructions" key', ({ I }) => {
@@ -101,7 +114,7 @@ Scenario('The network request payload has an empty "instructions" key', ({ I }) 
     I.seeResponseCodeIsClientError();
 });
 
-Scenario('The newtork request payload has an empty value for "instructions"', ({ I }) => {
+Scenario('The network request payload has an empty value for the "instructions" string', ({ I }) => {
 
     // When the following network request is sent
     I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "" })
@@ -110,10 +123,9 @@ Scenario('The newtork request payload has an empty value for "instructions"', ({
     I.seeResponseCodeIsClientError();
 });
 
-Scenario('The network request payload has an empty nested array for "patches"', ({ I }) => {
+Scenario('The network request payload has an empty nested "patches" array ', ({ I }) => {
 
     // When the following network request is sent
-    // I.sendPostRequest('v1/cleaning-sessions', { "roomSize" : [5, 5], "coords" : [1, 1], "patches" : [[]], "instructions" : "SSENNNW" })
     I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[]], "instructions": "SSENNNW" })
 
     // Then I expect to see a client error based on the nested "patches" array being empty
@@ -138,7 +150,7 @@ Scenario('The network request payload is empty', ({ I }) => {
     I.seeResponseCodeIsServerError();
 });
 
-Scenario('The network request payload has an empty array for "roomSize"', ({ I }) => {
+Scenario('The network request payload has an empty "roomSize" array', ({ I }) => {
 
     // When the following network request is sent
     I.sendPostRequest(url, { "roomSize": [], "coords": [1, 0], "": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
@@ -183,7 +195,7 @@ Scenario('The network request payload has only one value defined for the "roomSi
     I.seeResponseCodeIsServerError();
 });
 
-Scenario('The network request payload has an invalid value for "instructions" ', ({ I }) => {
+Scenario('The network request payload has an invalid value for the "instructions" string ', ({ I }) => {
 
     // When the following network request is sent
     I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENZNNW" })
@@ -195,7 +207,7 @@ Scenario('The network request payload has an invalid value for "instructions" ',
 Scenario('The network request payload has a float value instead of an integer in a "patches" array', ({ I }) => {
 
     // When the following network request is sent
-    I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instuctions": "SSENNNW" })
+    I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2.2], [2, 3]], "instuctions": "SSENNNW" })
 
     // Then I expect to see a client error based on the float value being present in the "patches" array
     I.seeResponseCodeIsClientError();
