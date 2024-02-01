@@ -1,6 +1,6 @@
 /** @type {CodeceptJS.MainConfig} */
 exports.config = {
-  tests: './*_test.js',
+  tests: './*_tests.js',
   output: './output',
   helpers: {
     REST: {
@@ -12,5 +12,5 @@ exports.config = {
   include: {
     I: './steps_file.js'
   },
-  name: 'myFirstTest'
+  name: 'hoooverApiAutomation'
 }

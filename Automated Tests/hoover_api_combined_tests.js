@@ -43,8 +43,8 @@ Scenario('The Hoover is sent to clean three patches of dirt on a 5x5 grid', ({ I
 
 Scenario('The Hoover is sent to clean two patches of dirt on a 10x10 grid', ({ I }) => {
 
-     // Given the dirt patches provided
-     var expectedJson = { "coords": [6, 0], "patches": 2 }
+    // Given the dirt patches provided
+    var expectedJson = { "coords": [6, 0], "patches": 2 }
 
     // When the following network request is sent
     I.sendPostRequest(url, { "roomSize": [10, 10], "coords": [9, 0], "patches": [[5, 0], [6, 2], [8, 3]], "instructions": "WNNNWWSSS" })
@@ -107,7 +107,6 @@ Scenario('The starting coordinates of the Hoover are outside of the defined grid
 Scenario('The network request payload has an empty "instructions" key', ({ I }) => {
 
     // When the following network request is sent
-    //I.sendPostRequest(url, createJsonPayload(coords = [1, 2], patches = [[1, 0], [2, 2], [2, 3]], "" = "SSENNNW"))
     I.sendPostRequest(url, { "roomSize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "": "SSENNNW" })
 
     // Then I expect to see a client error based on the empty "instructions" key
