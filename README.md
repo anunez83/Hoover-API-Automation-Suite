@@ -20,7 +20,6 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 	  * To test a roomSize larger than `[5, 5]` one can be defined directly in the request like so:
 		  * `I.sendPostRequest(url, { "roomSize": [10, 10], "coords": [9, 0], "patches": [[5, 0], [6, 2], [8, 3]], "instructions":  "WNNNWWSSS" })`
   * `createJsonPayload`: This is a utlity function to generate the payload with `roomSize`, `coords`, `patches`, and `instructions`
- * When possible a var named `expectedJson` is being utilized to define the expected response coming from the API that will be validated against
 
 
 ## Getting Started
@@ -37,13 +36,13 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 1. The API **does not** appear to have a mechanism in place to remove patches from memory that have been cleaned. Because of this, any tests containing logic to validate the server response based on `"coords"` or `"patches"` will fail until the API is restarted.
 2. If the Hoover starting `"coords"` begin on a dirt patch the current logic does not treat this as cleaned, until the Hoover traverses that sector again via the provided `"instructions"`
 3. A `java.lang.NullPointerException: null` error was seen in the API logs for the following scenarios:
-	* Scenario('The network request payload is empty'
-	* Scenario('The network request payload has an empty "roomSize" array'
-	* Scenario('The network request payload has a lowercase "roomsize" key instead of being camel case'
+	* Scenario('The network request payload is empty')
+	* Scenario('The network request payload has an empty "roomSize" array')
+	* Scenario('The network request payload has a lowercase "roomsize" key instead of being camel case')
 4. A `java.lang.ArrayIndexOutOfBoundsException: 0` error was seen in the API logs for the following scenario:
-	* Scenario('The network request payload has an empty "roomSize" array'
+	* Scenario('The network request payload has an empty "roomSize" array')
 5. A `java.lang.ArrayIndexOutOfBoundsException: 1` error was seen in the API logs for the following scenario:
-	* Scenario('The network request payload has only one value defined for the "roomSize" array'
+	* Scenario('The network request payload has only one value defined for the "roomSize" array')
 
 ## Recommended Improvements
 * I think it would make things much more efficient to have the API Response updated to include the corresponding `[x, y]` coordinates of the `"patches"` that were cleaned.

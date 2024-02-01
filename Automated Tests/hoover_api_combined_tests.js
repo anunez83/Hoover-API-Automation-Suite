@@ -104,6 +104,15 @@ Scenario('The starting coordinates of the Hoover are outside of the defined grid
     I.seeResponseCodeIsClientError();
 });
 
+Scenario('The network request payload has an empty "coords" key', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPostRequest(urlPath, { "roomSize": [5, 5], "": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "": "SSENNNW" })
+
+    // Then I expect to see a client error based on the empty "coords" key
+    I.seeResponseCodeIsClientError();
+});
+
 Scenario('The network request payload has an empty "instructions" key', ({ I }) => {
 
     // When the following network request is sent
@@ -212,6 +221,15 @@ Scenario('The network request payload has a float value instead of an integer in
     I.seeResponseCodeIsClientError();
 });
 
+Scenario('The network request payload has a misspelled "coords" key', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPostRequest(urlPath, { "roomSize": [5, 5], "Coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the "coords" key being misspelled
+    I.seeResponseCodeIsClientError();
+});
+
 Scenario('The network request payload has a misspelled "instructions" key', ({ I }) => {
 
     // When the following network request is sent
@@ -237,5 +255,68 @@ Scenario('The network request payload has a lowercase "roomsize" key instead of 
 
     // Then I expect to see a server error based on the "roomSize" key being lowercase
     I.seeResponseCodeIsServerError();
+});
+
+Scenario('The "roomSize" value is set to 0, 0', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPostRequest(urlPath, { "roomSize": [0, 0], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the "roomSize" value set to 0, 0
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The roomSize is set to an extremely large number to see the maximum supported value', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPostRequest(urlPath, { "roomSize": [10000000000, 10000000000], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the "roomSize" value set so high
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The request is sent via the GET method instead of POST', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendGetRequest(urlPath, { "roomSize": [10000000000, 10000000000], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the wrong request method being utilized
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The request is sent via the PUT method instead of POST', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPutRequest(urlPath, { "roomSize": [10000000000, 10000000000], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the wrong request method being utilized
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The request is sent via the PATCH method instead of POST', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPatchRequest(urlPath, { "roomSize": [10000000000, 10000000000], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the wrong request method being utilized
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The request is sent via the DELETE method instead of POST', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendDeleteRequest(urlPath, { "roomSize": [10000000000, 10000000000], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a client error based on the wrong request method being utilized
+    I.seeResponseCodeIsClientError();
+});
+
+Scenario('The network request is sent to the wrong path', ({ I }) => {
+
+    // When the following network request is sent
+    I.sendPostRequest('v1/cleaning-session', { "roomsize": [5, 5], "coords": [1, 0], "patches": [[1, 0], [2, 2], [2, 3]], "instructions": "SSENNNW" })
+
+    // Then I expect to see a 404 error based on the request being sent to a path that does not exist
+    I.seeResponseCodeIs(404);
 });
 
