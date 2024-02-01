@@ -6,19 +6,20 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 
 ## Test Requirements
  * [Docker v.18+](https://www.docker.com/)
-   * [Platform Science SDET assignment repo](Platform%20Science%20Software%20Development%20Engineer%20in%20Test%20assignment)
+   * [Platform Science SDET assignment repo](https://bitbucket.org/platformscience/pltsci-sdet-assignment/src/main/)
 * [Node.js](https://nodejs.org/en)
 * [CodeceptJS](https://codecept.io/)
 
 
 ## Documentation 
+* The API endpoint is defined in the `codecept.conf.js` file
 * All of the test scenarios are contained within the `hoover_api_combined_tests.js` file
 * A `hoover_commons.js` file is provided which contains the following:
-	* `url`: This const provides the API endpoint `v1/cleaning-sessions`
-  * `roomSize`: This const provides the default room size of `[5, 5]`
+	* `urlPath`: This constant provides the API path `v1/cleaning-sessions`
+  * `roomSize`: This constant provides the default room size of `[5, 5]`
 	  * To test a roomSize larger than `[5, 5]` one can be defined directly in the request like so:
 		  * `I.sendPostRequest(url, { "roomSize": [10, 10], "coords": [9, 0], "patches": [[5, 0], [6, 2], [8, 3]], "instructions":  "WNNNWWSSS" })`
-  * `createJsonPayload`: This function returns an object with `roomSize`, `coords`, `patches`, and `instructions`
+  * `createJsonPayload`: This is a utlity function to generate the payload with `roomSize`, `coords`, `patches`, and `instructions`
  * When possible a var named `expectedJson` is being utilized to define the expected response coming from the API that will be validated against
 
 
@@ -35,10 +36,18 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 ## Known Issues
 1. The API **does not** appear to have a mechanism in place to remove patches from memory that have been cleaned. Because of this, any tests containing logic to validate the server response based on `"coords"` or `"patches"` will fail until the API is restarted.
 2. If the Hoover starting `"coords"` begin on a dirt patch the current logic does not treat this as cleaned, until the Hoover traverses that sector again via the provided `"instructions"`
+3. A `java.lang.NullPointerException: null` error was seen in the API logs for the following scenarios:
+	* Scenario('The network request payload is empty'
+	* Scenario('The network request payload has an empty "roomSize" array'
+	* Scenario('The network request payload has a lowercase "roomsize" key instead of being camel case'
+4. A `java.lang.ArrayIndexOutOfBoundsException: 0` error was seen in the API logs for the following scenario:
+	* Scenario('The network request payload has an empty "roomSize" array'
+5. A `java.lang.ArrayIndexOutOfBoundsException: 1` error was seen in the API logs for the following scenario:
+	* Scenario('The network request payload has only one value defined for the "roomSize" array'
 
 ## Recommended Improvements
 * I think it would make things much more efficient to have the API Response updated to include the corresponding `[x, y]` coordinates of the `"patches"` that were cleaned.
 * I think it would be great if the API was updated to include a `"patches_missed"` count along with the corresponding `[x, y]` coordinates. Something like this would greatly improve the usability and usefulness of the response data. 
-* Network requests that fail due to a status code of `400` currently have an empty message returned by the API. Implementing detailed response messages would help consumers of the API pinpoint the problems with these specific requests.
+* Any network requests that fail due to a Status Code of `400` currently have an empty message returned by the API. Implementing detailed response messages would help consumers of the API pinpoint the problems with these specific requests.
 * Network requests that fail due to a status code of `500` are more detailed than the others, but aren't very informative to consumers as to what the exact issue is.
 	* Through my testing I saw messages returned for these that included `null`, `"0"`, and `"1"`
