@@ -33,8 +33,8 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 7. Upon completion the CLI will print an output of passes and failures. Failures will include more detailed information to highlight what caused the test(s) to fail.
 
 ## Known Issues
-1. The API **does not** appear to have a mechanism in place to remove patches from memory that have been cleaned. Because of this, any tests containing logic to validate the server response based on  `"patches"` will fail until the API is restarted.
-	* This can be seen utilizing the last scenario `The Hoover is navigated across the entirety of a 5x5 grid with each sector being defined as a dirt patch` which is commented out by default, but can be run to see how this affects the subsequent tests.
+1. The API **does not** appear to have a mechanism in place to remove patches from memory. Because of this, if any tests are ran which increase the number of patches the API is aware of it may invalidate subsquent tests that may inadvertently path over these new patches which did not exist before. This will cause any tests containing logic to validate the server response based on a `"patches"` value to fail until the API is restarted.
+	* This can be seen utilizing the last scenario `The Hoover is navigated across the entirety of a 5x5 grid with each sector being defined as a dirt patch` which increase the patches count to 25. This scenario is commented out by default, but can be run to see how this affects the subsequent tests.
 2. If the Hoover starting `"coords"` begin on a dirt patch the current logic does not treat this as cleaned, until the Hoover traverses that sector again via the provided `"instructions"`
 3. The API accepts float data in the array for `"patches"` which I'm not sure is intended or a bug.
 4. A `java.lang.NullPointerException: null` error was seen in the API logs for the following scenarios:
