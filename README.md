@@ -33,15 +33,17 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 7. Upon completion the CLI will print an output of passes and failures. Failures will include more detailed information to highlight what caused the test(s) to fail.
 
 ## Known Issues
-1. The API **does not** appear to have a mechanism in place to remove patches from memory that have been cleaned. Because of this, any tests containing logic to validate the server response based on `"coords"` or `"patches"` will fail until the API is restarted.
+1. The API **does not** appear to have a mechanism in place to remove patches from memory that have been cleaned. Because of this, any tests containing logic to validate the server response based on  `"patches"` will fail until the API is restarted.
+	* This can be seen utilizing the last scenario `The Hoover is navigated across the entirety of a 5x5 grid with each sector being defined as a dirt patch` which is commented out by default, but can be run to see how this affects the subsequent tests.
 2. If the Hoover starting `"coords"` begin on a dirt patch the current logic does not treat this as cleaned, until the Hoover traverses that sector again via the provided `"instructions"`
-3. A `java.lang.NullPointerException: null` error was seen in the API logs for the following scenarios:
+3. The API accepts float data in the array for `"patches"` which I'm not sure is intended or a bug.
+4. A `java.lang.NullPointerException: null` error was seen in the API logs for the following scenarios:
 	* Scenario('The network request payload is empty')
 	* Scenario('The network request payload has an empty "roomSize" array')
 	* Scenario('The network request payload has a lowercase "roomsize" key instead of being camel case')
-4. A `java.lang.ArrayIndexOutOfBoundsException: 0` error was seen in the API logs for the following scenario:
+5. A `java.lang.ArrayIndexOutOfBoundsException: 0` error was seen in the API logs for the following scenario:
 	* Scenario('The network request payload has an empty "roomSize" array')
-5. A `java.lang.ArrayIndexOutOfBoundsException: 1` error was seen in the API logs for the following scenario:
+6. A `java.lang.ArrayIndexOutOfBoundsException: 1` error was seen in the API logs for the following scenario:
 	* Scenario('The network request payload has only one value defined for the "roomSize" array')
 
 ## Recommended Improvements
@@ -49,4 +51,4 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 * I also think a nice addition to the API Response would be to include a new `"patches_missed"` count along with the corresponding `[x, y]` coordinates. Something like this would greatly improve the usability and usefulness of the response data. 
 * Any network requests that fail due to a Status Code of `400` currently have an empty message returned by the API. Implementing detailed response messages would help consumers of the API pinpoint the problems with these specific requests.
 * Network requests that fail due to a status code of `500` are more detailed than the others, but aren't very informative to consumers as to what the exact issue is.
-	* Through my testing I saw messages returned for these that included `null`, `"0"`, and `"1"` 
+	* Through my testing I saw messages returned for these that included `null`, `"0"`, and `"1"`
