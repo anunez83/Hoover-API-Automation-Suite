@@ -49,4 +49,4 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 * I also think a nice addition to the API Response would be to include a new `"patches_missed"` count along with the corresponding `[x, y]` coordinates. Something like this would greatly improve the usability and usefulness of the response data. 
 * Any network requests that fail due to a Status Code of `400` currently have an empty message returned by the API. Implementing detailed response messages would help consumers of the API pinpoint the problems with these specific requests.
 * Network requests that fail due to a status code of `500` are more detailed than the others, but aren't very informative to consumers as to what the exact issue is.
-	* Through my testing I saw messages returned for these that included `null`, `"0"`, and `"1"`
+	* Through my testing I saw messages returned for these that included `null`, `"0"`, and `"1"` 
