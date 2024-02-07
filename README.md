@@ -23,14 +23,15 @@ These tests were created to verify the functionality of the *v1/cleaning-session
 
 
 ## Getting Started
-1. Download the test suite via the [Initial-Tests](https://github.com/anunez83/Hoover-API-Automation-Suite/tree/Initial-Tests) repo
+1. Download the test suite via the [Initial-Tests](https://github.com/anunez83/Hoover-API-Automation-Suite/tree/Initial-Tests) branch
 2. Unpack the zip file and open it in your code editor
 3. Open a CLI window
 4. Change directory to the `"Automated Tests"` folder
-5. On first run the *npx codeceptjs init* command will need to be utilized to ensure that everything has been initialized properly
-6. The command `npx codeceptjs run` or `npx codeceptjs run "hoover_api_combined_tests.js"` can be utilized to run the tests
+5. Run the command *npm install* to fetch all dependencies
+6. On first run the *npx codeceptjs init* command will need to be utilized to ensure that everything has been initialized properly
+7. The command `npx codeceptjs run` or `npx codeceptjs run "hoover_api_combined_tests.js"` can be utilized to run the tests
 	* Additionally the `--verbose` flag can be appended to the end of either command to provide more detailed results
-7. Upon completion the CLI will print an output of passes and failures. Failures will include more detailed information to highlight what caused the test(s) to fail.
+8. Upon completion the CLI will print an output of passes and failures. Failures will include more detailed information to highlight what caused the test(s) to fail.
 
 ## Known Issues
 1. The API **does not** appear to have a mechanism in place to remove patches from memory. Because of this, if any tests are ran which increase the number of patches the API is aware of it may invalidate subsquent tests that may inadvertently path over these new patches which did not exist before. This will cause any tests containing logic to validate the server response based on a `"patches"` value to fail until the API is restarted.
